@@ -9,14 +9,13 @@ resource "aws_instance" "demo-server" {
     vpc_security_group_ids = [aws_security_group.demo-sg.id]
     subnet_id = aws_subnet.public-subnet-01.id 
 
-	
-	tags = {
-	Name = "demo-1"
-	env = "dev"
-	}
-	
-	}
-	
+	for_each = toset(["jenkins-master", "build-slave", "ansible"])
+   tags = {
+     Name = "${each.key}"
+     Env="Dev"
+   }
+}
+	 
 
 resource "aws_security_group" "demo-sg" {
   name        = "demo-sg"
